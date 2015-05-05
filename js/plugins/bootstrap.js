@@ -212,7 +212,7 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
 
   var old = $.fn.button
 
-  $.fn.button = function (option) {
+  $.fn.bsButton = function (option) {
     return this.each(function () {
       var $this   = $(this)
       var data    = $this.data('bs.button')
@@ -225,14 +225,14 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
     })
   }
 
-  $.fn.button.Constructor = Button
+  $.fn.bsButton.Constructor = Button
 
 
   // BUTTON NO CONFLICT
   // ==================
 
-  $.fn.button.noConflict = function () {
-    $.fn.button = old
+  $.fn.bsButton.noConflict = function () {
+    $.fn.bsButton = old
     return this
   }
 
@@ -243,7 +243,7 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
   $(document).on('click.bs.button.data-api', '[data-toggle^=button]', function (e) {
     var $btn = $(e.target)
     if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
-    $btn.button('toggle')
+    $btn.bsButton('toggle')
     e.preventDefault()
   })
 
@@ -1037,7 +1037,7 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
     this.hoverState =
     this.$element   = null
 
-    this.init('tooltip', element, options)
+    this.init('bsTooltip', element, options)
   }
 
   Tooltip.DEFAULTS = {
@@ -1391,11 +1391,11 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
   $.fn.bsTooltip = function (option) {
     return this.each(function () {
       var $this   = $(this)
-      var data    = $this.data('bs.tooltip')
+      var data    = $this.data('bs.bsTooltip')
       var options = typeof option == 'object' && option
 
       if (!data && option == 'destroy') return
-      if (!data) $this.data('bs.tooltip', (data = new Tooltip(this, options)))
+      if (!data) $this.data('bs.bsTooltip', (data = new Tooltip(this, options)))
       if (typeof option == 'string') data[option]()
     })
   }

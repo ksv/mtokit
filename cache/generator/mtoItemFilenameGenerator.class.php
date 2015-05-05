@@ -120,6 +120,19 @@ class mtoItemFilenameGenerator extends mtoCommonFilenameGenerator
         $this->parts[] = implode("_", $fileparts);
     }
 
+    function delete($args = array())
+    {
+        //$args = $this->extract_args($args);
+        $args['id'] = $args['path'];
+        $dir = mtoConf :: instance()->getFile("cache_args", "path");
+        $args['scope'] = $this->parent->getScope();
+        $this->parts = array();
+        $this->appendDir($args);
+        $dir .= "/" . implode("/", $this->parts);
+        mtoFs :: rm($dir);
+        return true;
+    }
+
 
 
 

@@ -8506,6 +8506,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
      * @private
      */
     _drawSelection: function () {
+
       var ctx = this.contextTop,
           groupSelector = this._groupSelector,
           left = groupSelector.left,

@@ -54,10 +54,17 @@ class mtoCronCommand extends mtoCliBaseCommand
                 }
                 try
                 {
+                    $r = file_put_contents("var/locks/cron." . posix_getpid(), json_encode($job));
+                    if ($r === false)
+                    {
+                        var_dump($job);
+                    }
                     $cmd->execute($job['args']);
+                    unlink("var/locks/cron." . posix_getpid());
                 }
                 catch (Exception $e)
                 {
+                    unlink("var/locks/cron." . posix_getpid());
                     var_dump("ERROR: " . $e->getMessage());
                 }
                 $cmd->out($job['command'] . " executed in " . round(microtime(true) - $t, 2) . " seconds");

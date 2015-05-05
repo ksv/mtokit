@@ -11,7 +11,6 @@ class mtoApplication implements ArrayAccess
     protected $request;
     protected $conf;
     protected $toolkit;
-    protected $dispatcher = null;
     protected $db = null;
     protected $route = null;
     protected $session;
@@ -48,13 +47,7 @@ class mtoApplication implements ArrayAccess
         return $this;
     }
     
-    function dispatcher($dispatcher)
-    {
-        mtoClass :: import($dispatcher . ".class.php");
-        $class = basename($dispatcher);
-        $this->dispatcher = new $class($this);
-    }
-    
+
     
     function bootstrap($args = array())
     {
@@ -75,7 +68,6 @@ class mtoApplication implements ArrayAccess
     
     protected function route($args = array())
     {
-        //$this->dispatcher->beforeRequestDispatch();
         $routes = $this->conf->get('webapp.route');
         if (is_array($routes))
         {

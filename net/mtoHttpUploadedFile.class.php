@@ -109,7 +109,7 @@ class mtoHttpUploadedFile
 
     function getName()
     {
-        return $this->fileInfo['name'];
+        return isset($this->fileInfo['name']) ? $this->fileInfo['name'] : "";
     }
 
     function getTmpName()

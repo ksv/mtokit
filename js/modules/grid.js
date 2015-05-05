@@ -343,7 +343,7 @@ define([
                     var td = $(e.target);
                     if ($(td).parents("tr:first").data("row_id"))
                     {
-                        $("a:first", $(td).parents("tr:first")).click();
+                        $("a:first span", $(td).parents("tr:first")).click();
                     }
                 }
             })

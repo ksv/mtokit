@@ -145,7 +145,8 @@ class mtoCacheImageConnection extends mtoCacheAbstractConnection
                 return false;
                 //mtoProfiler :: instance()->logDebug($_SERVER['REQUEST_URI'] . "\thas conv:" . isset($args['conv']), "debug/imgcache_no_instance");
             }
-            
+
+
             if (isset($args['w']) && isset($args['h']))
             {
                 $conv->resize(array('width' => $args['w'], 'height' => $args['h'], 'clip' => $this->clip));
@@ -219,6 +220,10 @@ class mtoCacheImageConnection extends mtoCacheAbstractConnection
         $args['instance'] = $key;
         $args['type'] = $this->scope;
         $args = $this->generator->extract_args($args);
+        if (empty($args['id']))
+        {
+            $args['id'] = 0;
+        }
         mtoProfiler :: instance()->logDebug("Connection has called delete for " . ($args['id']), "cdn_delete");
         //var_dump($args);
         if (!is_null($this->cdn) && !empty($args['skey']))

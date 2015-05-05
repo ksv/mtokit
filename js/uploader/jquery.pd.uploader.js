@@ -230,7 +230,14 @@
                     onLeave: "Файлы загружаются, закрытие окна приведет к отмене загрузки."            
                 },
                 onSubmit: function(id, fileName){
-                    var tpl = $('#fileo_tepl').html().replace(new RegExp("\\[ID\\]","g"),"tmp"+id).replace("[FILENAME]","").replace("[SIZE]", "");
+
+
+                    if (fileName.length>16)
+                    {
+                        fileName = fileName.substring(0,6)+'...'+fileName.substring(fileName.length-7)
+                    }
+
+                    var tpl = $('#fileo_tepl').html().replace(new RegExp("\\[ID\\]","g"),"tmp"+id).replace("[FILENAME]","").replace("[SIZE]", "").replace("[LIST_NAME]", fileName);
                     cont.prepend(tpl);
 
                 },

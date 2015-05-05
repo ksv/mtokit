@@ -202,12 +202,20 @@ define(["cfg",
                     {
                         $scope.addClass($scope.data('submit_class'));
                     }
+                    if ($elem.data('submit_bs'))
+                    {
+                        $elem.bsButton('loading');
+                    }
                     _proxy[act]([$frm.data("form"), $grid.data("grid"), (params['force_row'] ? "i:"+$row.data("row_id") : ""), $elem.data("model"), 'wm:'], content, function(res)
                     {
                         $elem.prop('disabled', false);          
                         if ($scope.data('submit_class'))
                         {
                             $scope.removeClass($scope.data('submit_class'));
+                        }
+                        if ($elem.data('submit_bs'))
+                        {
+                            $elem.bsButton('reset');
                         }
                         $elem.removeAttr("disabled");
                         var meth = "onAfterSubmit_" + $frm.attr("id");                        
@@ -354,7 +362,9 @@ define(["cfg",
         },
         trigger : function(event, data) 
         {
-            
+            //console.log(event);
+            //console.log(data);
+
             if (typeof(data) == "undefined")
             {
                 data = {};
