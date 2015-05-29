@@ -836,13 +836,21 @@ class TemplateTagDbtable extends TemplateTagAbstract
             case "ticket_body":
             break;
             case "truncate":
-                if (mb_strlen($value, 'UTF-8') > 100)
+                if ($row['ticket_jivosite'])
                 {
-                    return "<span  data-tooltip='".str_replace("'", "", str_replace("\r", "", str_replace("\n", "", nl2br($value))))."' title=''>" . mb_substr($value, 0, 100, 'UTF-8') . "..." . "</span>";
+                    $add = '<b>(jivosite)</b> ';
                 }
                 else
                 {
-                    return $value;
+                    $add = '';
+                }
+                if (mb_strlen($value, 'UTF-8') > 100)
+                {
+                    return $add . "<span  data-tooltip='".str_replace("'", "", str_replace("\r", "", str_replace("\n", "", nl2br($value))))."' title=''>" . mb_substr($value, 0, 100, 'UTF-8') . "..." . "</span>";
+                }
+                else
+                {
+                    return $add . $value;
                 }
             break;
             case "email":
