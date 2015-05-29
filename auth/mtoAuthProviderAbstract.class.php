@@ -48,6 +48,7 @@ abstract class mtoAuthProviderAbstract
 
     protected function redirect($target, $args = array())
     {
+        mtoProfiler :: instance()->logDebug($target . '?' . http_build_query($args), "debug/social");
         header('Location: ' . $target . '?' . http_build_query($args));
     }
 

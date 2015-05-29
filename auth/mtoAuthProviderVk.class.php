@@ -3,8 +3,10 @@
 class mtoAuthProviderVk extends mtoAuthProviderAbstract
 {
     private static $scope = 'wall,offline,notes,email';
-    protected $oauth_access_token = "https://api.vk.com/oauth/access_token";
-    protected $oauth_authorize = "http://api.vk.com/oauth/authorize";
+    //protected $oauth_access_token = "https://api.vk.com/oauth/access_token";
+    protected $oauth_access_token = "https://oauth.vk.com/access_token";
+    //protected $oauth_authorize = "http://api.vk.com/oauth/authorize";
+    protected $oauth_authorize = "http://oauth.vk.com/authorize";
     protected $base_api = "https://api.vkontakte.ru/method/";
     protected $name = "vk";
 
@@ -22,9 +24,11 @@ class mtoAuthProviderVk extends mtoAuthProviderAbstract
             'client_id' => $this->application_key, 
             'redirect_uri' => $this->get_callback_uri($this->oauth_callback, $args), 
             'display' => 'popup',
-            'scope' => self :: $scope
+            'scope' => self :: $scope,
+            'response_type' => "code",
+            'state' => $hashback,
+            'v' => "5.33"
         );
-
         $this->session->set('auth_hashback', $hashback);
         $this->redirect($this->oauth_authorize, $info);
     }
@@ -43,18 +47,19 @@ class mtoAuthProviderVk extends mtoAuthProviderAbstract
             'code' => $this->request->get("code"),
             'redirect_uri' => $this->get_callback_uri($this->oauth_callback, $args), 
         );
-
         $result = $this->http_call($this->oauth_access_token, $info);
+        mtoProfiler :: instance()->logDebug($result, "debug/social");
         $result = json_decode($result, true);
         
         $profile = $this->getProfile($result['access_token'], $result['user_id']);
+        mtoProfiler :: instance()->logDebug(print_r($profile, true), "debug/social");
 
         if (isset($result['access_token']))
         {
             return array(
                 'token' => $result['access_token'], 
                 'user' => $result['user_id'],
-                'email' => null,
+                'email' => isset($result['email']) ? $result['email'] : null,
                 'fname' => $profile['first_name'],
                 'lname' => $profile['last_name'],
                 'socid' => $profile['uid'],
