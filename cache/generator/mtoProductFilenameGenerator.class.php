@@ -7,6 +7,7 @@ class mtoProductFilenameGenerator extends mtoCommonFilenameGenerator
 
     function parse($args = array())
     {
+
         $params = array();
         $l1 = array_shift($args);
         $l2 = array_shift($args);
@@ -40,6 +41,7 @@ class mtoProductFilenameGenerator extends mtoCommonFilenameGenerator
         }
         $params['option_id'] = array_shift($parts);
         $item = array_shift($parts);
+
         if (intval($item) > 0)
         {
             $params['instance']->overrideItem(intval($item));
@@ -53,7 +55,17 @@ class mtoProductFilenameGenerator extends mtoCommonFilenameGenerator
         {
             $params['instance']->useBlankItem();
         }
+
         $params['path'] = $params['instance'];
+
+
+        if ($params['instance']->isFabricConstructor())
+        {
+            $params['preserve_aspect_ratio'] = 1;
+        }
+
+
+
         return $params;
         
 //        $filename = array_shift($args);
@@ -141,6 +153,7 @@ class mtoProductFilenameGenerator extends mtoCommonFilenameGenerator
 
     function extract_args($args)
     {
+
         $args['id'] = $args['instance']->productInfo['tov_id'];
         $args['skey'] = $args['instance']->productInfo['tov_owner'];
         $side = empty($args['side']) ? "front" : $args['side'];
@@ -156,16 +169,30 @@ class mtoProductFilenameGenerator extends mtoCommonFilenameGenerator
                 $args['use_3dmask'] = 1;
             }
         }
+
+        if ($args['instance']->isFabricConstructor())
+        {
+            $args['preserve_aspect_ratio'] = 1;
+        }
+
         if (empty($args['changed']))
         {
             $args['changed'] = $args['instance']->productInfo['tov_last_changed'];
         }
+
+
+
+
+
         return $args;
     }
 
 
     function create($args)
     {
+
+
+
         if (!isset($args['generate_type']))
         {
             mtoProfiler :: instance()->logCatchError("generate type not defined");
@@ -186,6 +213,12 @@ class mtoProductFilenameGenerator extends mtoCommonFilenameGenerator
         elseif($args['generate_type'] == "cloth")
         {
             $image = $args['instance']->build_image(array('type' => 'cloth', 'side' => $args['side'], 'orig' => !empty($args['orig'])));
+        }
+
+        elseif($args['generate_type'] == "vis")
+        {
+
+            $image = $args['instance']->build_image(array('type' => 'vis', 'side' => $args['side'],  'pa' => $args['option_id'], 'orig' => !empty($args['orig'])));
         }
         else
         {
@@ -281,6 +314,16 @@ class mtoProductFilenameGenerator extends mtoCommonFilenameGenerator
             $this->parts[] = "cloth";
             $this->parts[] = "all";
             $ext = "jpg";
+        }
+        elseif(isset($args['generate_type']) && $args['generate_type'] == "vis")
+        {
+            $this->parts[] = "vis";
+            $this->parts[] = "all";
+            $ext = "jpg";
+            if (!empty($args['pa']))
+            {
+                $args['option_id'] = $args['pa'];
+            }
         }
         else
         {

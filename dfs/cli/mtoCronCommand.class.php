@@ -59,6 +59,8 @@ class mtoCronCommand extends mtoCliBaseCommand
                     {
                         var_dump($job);
                     }
+                    $db = mtoToolkit :: instance()->getDbConnection();
+                    $db->execute("set @currentMode=?", array($job['command']));
                     $cmd->execute($job['args']);
                     unlink("var/locks/cron." . posix_getpid());
                 }

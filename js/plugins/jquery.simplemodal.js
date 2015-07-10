@@ -207,7 +207,7 @@
 		closeClass: 'simplemodal-close',
 		escClose: true,
 		overlayClose: false,
-		fixed: true,
+		fixed: false,
 		position: null,
 		persist: true,
 		modal: true,
@@ -301,40 +301,64 @@
 		create: function (data) {
 			var s = this;
 
+            $("html,body").css("overflow", "hidden");
 			// get the window properties
 			s.getDimensions();
 
 			// add an iframe to prevent select options from bleeding through
-			if (s.o.modal && browser.ie6) {
-				s.d.iframe = $('<iframe src="javascript:false;"></iframe>')
-					.css($.extend(s.o.iframeCss, {
-						display: 'none',
-						opacity: 0,
-						position: 'fixed',
-						height: w[0],
-						width: w[1],
-						zIndex: s.o.zIndex,
-						top: 0,
-						left: 0
-					}))
-					.appendTo(s.o.appendTo);
-			}
+			//if (s.o.modal && browser.ie6) {
+			//	s.d.iframe = $('<iframe src="javascript:false;"></iframe>')
+			//		.css($.extend(s.o.iframeCss, {
+			//			display: 'none',
+			//			opacity: 0,
+			//			position: 'fixed',
+			//			height: w[0],
+			//			width: w[1],
+			//			zIndex: s.o.zIndex,
+			//			top: 0,
+			//			left: 0
+			//		}))
+			//		.appendTo(s.o.appendTo);
+			//}
 
 			// create the overlay
+            //alert(w[0] + 'x' + w[1]);
 			s.d.overlay = $('<div></div>')
 				.attr('id', s.o.overlayId)
 				.addClass('simplemodal-overlay')
 				.css($.extend(s.o.overlayCss, {
 					display: 'none',
 					opacity: s.o.opacity / 100,
-					height: s.o.modal ? d[0] : 0,
+					//height: s.o.modal ? d[0] : 0,
 					width: s.o.modal ? d[1] : 0,
+                    height: s.o.modal ? w[0] : 0,
+                    //width: s.o.modal ? w[1] : 0,
 					position: 'fixed',
 					left: 0,
 					top: 0,
 					zIndex: s.o.zIndex + 1
 				}))
 				.appendTo(s.o.appendTo);
+            console.log(s.o.overlayCss);
+            s.d.holder = $('<div></div>')
+                //.attr('id', s.o.holderId)
+                //.addClass('simplemodal-overlay')
+                .css($.extend(s.o.overlayCss, {
+                    display: 'none',
+                    //opacity: s.o.opacity / 100,
+                    //height: s.o.modal ? d[0] : 0,
+                    width: s.o.modal ? d[1] : 0,
+                    height: s.o.modal ? w[0] : 0,
+                    //width: s.o.modal ? w[1] : 0,
+                    position: 'absolute',
+                    opacity: 1,
+                    background: "transparent",
+                    left: 0,
+                    top: 0,
+                    zIndex: s.o.zIndex + 1,
+                    overflow: "auto"
+                }))
+                .appendTo(s.o.appendTo);
 
 			// create the container
 			s.d.container = $('<div></div>')
@@ -343,17 +367,28 @@
 				.css($.extend(
 					{position: s.o.fixed ? 'fixed' : 'absolute'},
 					s.o.containerCss,
-					{display: 'none', zIndex: s.o.zIndex + 2}
+					{
+                        display: 'none',
+                        zIndex: s.o.zIndex + 2
+                        //opacity: 0
+                        //height: s.o.modal ? w[0] : 0,
+                        //width: s.o.modal ? w[1] : 0
+                    }
 				))
 				.append(s.o.close && s.o.closeHTML
 					? $(s.o.closeHTML).addClass(s.o.closeClass)
 					: '')
-				.appendTo(s.o.appendTo);
+				//.appendTo(s.o.appendTo);
+                .appendTo(s.d.holder);
 
 			s.d.wrap = $('<div></div>')
 				.attr('tabIndex', -1)
 				.addClass('simplemodal-wrap')
+                //.css({'margin-left' : 'auto', 'margin-right' : 'auto'})
 				.css({height: '100%', outline: 0, width: '100%'})
+                //.append(s.o.close && s.o.closeHTML
+                //    ? $(s.o.closeHTML).addClass(s.o.closeClass)
+                //    : '')
 				.appendTo(s.d.container);
 
 			// add styling and attributes to the data
@@ -369,11 +404,10 @@
 
 			s.setContainerDimensions();
 			s.d.data.appendTo(s.d.wrap);
-
 			// fix issues with IE
-			if (browser.ie6 || browser.ieQuirks) {
-				s.fixIE();
-			}
+			//if (browser.ie6 || browser.ieQuirks) {
+			//	s.fixIE();
+			//}
 		},
 		/*
 		 * Bind events
@@ -414,10 +448,10 @@
 				// reposition the dialog
 				s.o.autoResize ? s.setContainerDimensions() : s.o.autoPosition && s.setPosition();
 
-				if (browser.ie6 || browser.ieQuirks) {
-					s.fixIE();
-				}
-				else if (s.o.modal) {
+				//if (browser.ie6 || browser.ieQuirks) {
+				//	s.fixIE();
+				//}
+				/*else*/ if (s.o.modal) {
 					// update the iframe & overlay
 					s.d.iframe && s.d.iframe.css({height: w[0], width: w[1]});
 					s.d.overlay.css({height: d[0], width: d[1]});
@@ -436,55 +470,55 @@
 		/*
 		 * Fix issues in IE6 and IE7 in quirks mode
 		 */
-		fixIE: function () {
-			var s = this, p = s.o.position;
-
-			// simulate fixed position - adapted from BlockUI
-			$.each([s.d.iframe || null, !s.o.modal ? null : s.d.overlay, s.d.container.css('position') === 'fixed' ? s.d.container : null], function (i, el) {
-				if (el) {
-					var bch = 'document.body.clientHeight', bcw = 'document.body.clientWidth',
-						bsh = 'document.body.scrollHeight', bsl = 'document.body.scrollLeft',
-						bst = 'document.body.scrollTop', bsw = 'document.body.scrollWidth',
-						ch = 'document.documentElement.clientHeight', cw = 'document.documentElement.clientWidth',
-						sl = 'document.documentElement.scrollLeft', st = 'document.documentElement.scrollTop',
-						s = el[0].style;
-
-					s.position = 'absolute';
-					if (i < 2) {
-						s.removeExpression('height');
-						s.removeExpression('width');
-						s.setExpression('height','' + bsh + ' > ' + bch + ' ? ' + bsh + ' : ' + bch + ' + "px"');
-						s.setExpression('width','' + bsw + ' > ' + bcw + ' ? ' + bsw + ' : ' + bcw + ' + "px"');
-					}
-					else {
-						var te, le;
-						if (p && p.constructor === Array) {
-							var top = p[0]
-								? typeof p[0] === 'number' ? p[0].toString() : p[0].replace(/px/, '')
-								: el.css('top').replace(/px/, '');
-							te = top.indexOf('%') === -1
-								? top + ' + (t = ' + st + ' ? ' + st + ' : ' + bst + ') + "px"'
-								: parseInt(top.replace(/%/, '')) + ' * ((' + ch + ' || ' + bch + ') / 100) + (t = ' + st + ' ? ' + st + ' : ' + bst + ') + "px"';
-
-							if (p[1]) {
-								var left = typeof p[1] === 'number' ? p[1].toString() : p[1].replace(/px/, '');
-								le = left.indexOf('%') === -1
-									? left + ' + (t = ' + sl + ' ? ' + sl + ' : ' + bsl + ') + "px"'
-									: parseInt(left.replace(/%/, '')) + ' * ((' + cw + ' || ' + bcw + ') / 100) + (t = ' + sl + ' ? ' + sl + ' : ' + bsl + ') + "px"';
-							}
-						}
-						else {
-							te = '(' + ch + ' || ' + bch + ') / 2 - (this.offsetHeight / 2) + (t = ' + st + ' ? ' + st + ' : ' + bst + ') + "px"';
-							le = '(' + cw + ' || ' + bcw + ') / 2 - (this.offsetWidth / 2) + (t = ' + sl + ' ? ' + sl + ' : ' + bsl + ') + "px"';
-						}
-						s.removeExpression('top');
-						s.removeExpression('left');
-						s.setExpression('top', te);
-						s.setExpression('left', le);
-					}
-				}
-			});
-		},
+		//fixIE: function () {
+		//	var s = this, p = s.o.position;
+        //
+		//	// simulate fixed position - adapted from BlockUI
+		//	$.each([s.d.iframe || null, !s.o.modal ? null : s.d.overlay, s.d.container.css('position') === 'fixed' ? s.d.container : null], function (i, el) {
+		//		if (el) {
+		//			var bch = 'document.body.clientHeight', bcw = 'document.body.clientWidth',
+		//				bsh = 'document.body.scrollHeight', bsl = 'document.body.scrollLeft',
+		//				bst = 'document.body.scrollTop', bsw = 'document.body.scrollWidth',
+		//				ch = 'document.documentElement.clientHeight', cw = 'document.documentElement.clientWidth',
+		//				sl = 'document.documentElement.scrollLeft', st = 'document.documentElement.scrollTop',
+		//				s = el[0].style;
+        //
+		//			s.position = 'absolute';
+		//			if (i < 2) {
+		//				s.removeExpression('height');
+		//				s.removeExpression('width');
+		//				s.setExpression('height','' + bsh + ' > ' + bch + ' ? ' + bsh + ' : ' + bch + ' + "px"');
+		//				s.setExpression('width','' + bsw + ' > ' + bcw + ' ? ' + bsw + ' : ' + bcw + ' + "px"');
+		//			}
+		//			else {
+		//				var te, le;
+		//				if (p && p.constructor === Array) {
+		//					var top = p[0]
+		//						? typeof p[0] === 'number' ? p[0].toString() : p[0].replace(/px/, '')
+		//						: el.css('top').replace(/px/, '');
+		//					te = top.indexOf('%') === -1
+		//						? top + ' + (t = ' + st + ' ? ' + st + ' : ' + bst + ') + "px"'
+		//						: parseInt(top.replace(/%/, '')) + ' * ((' + ch + ' || ' + bch + ') / 100) + (t = ' + st + ' ? ' + st + ' : ' + bst + ') + "px"';
+        //
+		//					if (p[1]) {
+		//						var left = typeof p[1] === 'number' ? p[1].toString() : p[1].replace(/px/, '');
+		//						le = left.indexOf('%') === -1
+		//							? left + ' + (t = ' + sl + ' ? ' + sl + ' : ' + bsl + ') + "px"'
+		//							: parseInt(left.replace(/%/, '')) + ' * ((' + cw + ' || ' + bcw + ') / 100) + (t = ' + sl + ' ? ' + sl + ' : ' + bsl + ') + "px"';
+		//					}
+		//				}
+		//				else {
+		//					te = '(' + ch + ' || ' + bch + ') / 2 - (this.offsetHeight / 2) + (t = ' + st + ' ? ' + st + ' : ' + bst + ') + "px"';
+		//					le = '(' + cw + ' || ' + bcw + ') / 2 - (this.offsetWidth / 2) + (t = ' + sl + ' ? ' + sl + ' : ' + bsl + ') + "px"';
+		//				}
+		//				s.removeExpression('top');
+		//				s.removeExpression('left');
+		//				s.setExpression('top', te);
+		//				s.setExpression('left', le);
+		//			}
+		//		}
+		//	});
+		//},
 		/*
 		 * Place focus on the first or last visible input
 		 */
@@ -541,8 +575,8 @@
 			s.bindEvents();
 		},
 		setContainerDimensions: function () {
-			var s = this,
-				badIE = browser.ie6 || browser.ie7;
+			var s = this;
+		    var badIE = browser.ie6 || browser.ie7;
 
 			// get the dimensions for the container and data
 			var ch = s.d.origHeight ? s.d.origHeight : browser.opera ? s.d.container.height() : s.getVal(badIE ? s.d.container[0].currentStyle['height'] : s.d.container.css('height'), 'h'),
@@ -587,7 +621,7 @@
 			}
 
 			s.d.container.css({height: ch, width: cw});
-			s.d.wrap.css({overflow: (dh > ch || dw > cw) ? 'auto' : 'visible'});
+			s.d.wrap.css({overflow: (dh > ch || dw > cw) ? 'visible' : 'visible'});
 			s.o.autoPosition && s.setPosition();
 		},
 		setPosition: function () {
@@ -645,6 +679,7 @@
 			else {
 				// display the remaining elements
 				s.d.overlay.show();
+                s.d.holder.show();
 				s.d.container.show();
 				s.d.data.show();
 			}
@@ -705,11 +740,14 @@
 				// remove the remaining elements
 				s.d.container.hide().remove();
 				s.d.overlay.hide();
+                s.d.holder.hide();
 				s.d.iframe && s.d.iframe.hide().remove();
+                s.d.holder.remove();
 				s.d.overlay.remove();
 
 				// reset the dialog object
 				s.d = {};
+                $('html,body').css('overflow', 'auto');
 			}
 		}
 	};

@@ -32,17 +32,28 @@ class mtoMailapiProviderUnisender extends mtoMailapiProviderAbstract
 
     function loadHooks($list_id)
     {
-        throw new mtoException("not supported");
+        $result = $this->decode($this->worker->listHooks());
+        $this->checkResult($result);
+        return $result;
     }
 
     function createHook($list_id, $url, $actions = array(), $sources = array())
     {
-        throw new mtoException("not supported");
+        $result = $this->decode($this->worker->setHook([
+            'hook_url' => $url,
+            'event_format' => $actions,
+            'events' => $sources,
+            'max_parallel' => 1
+        ]));
+        $this->checkResult($result);
+        return $result;
     }
 
     function removeHook($list_id, $url)
     {
-        throw new mtoException("not supported");
+        $result = $this->decode($this->worker->removeHook(['hook_url' => $url]));
+        $this->checkResult($result);
+        return $result;
     }
 
     function subscribe($list_id, $email, $args = array())

@@ -14,14 +14,28 @@ class mtoImResizeImageFilter extends mtoAbstractImageFilter
             {
                 mtoProfiler :: instance()->logDebug($_SERVER['REQUEST_URI'] . "\t" . $_SERVER['HTTP_REFERER'], "debug/cache_invalid_size");
             }
-            if ($this->getClip())
+
+            if ($this->getPreserveAspectRatio())
             {
-                $image->scaleImage($this->getWidth(), $this->getHeight(), false);
+
+                //new size
+                $new_size = $this->calcNewSize($image->getImageWidth(), $image->getImageHeight());
+                $image->scaleImage($new_size[0], $new_size[1], false);
+
+            } else {
+
+
+                if ($this->getClip()) {
+                    $image->scaleImage($this->getWidth(), $this->getHeight(), false);
+                } else {
+                    $image->scaleImage($this->getWidth(), $this->getHeight(), true);
+                }
             }
-            else
-            {
-                $image->scaleImage($this->getWidth(), $this->getHeight(), true);
-            }
+        }
+        if ($this->getJpegQuality())
+        {
+            $image->setImageFormat('jpeg');
+            $image->setCompressionQuality($this->getJpegQuality());
         }
         $container->replaceResource($image);
     }
@@ -38,6 +52,11 @@ class mtoImResizeImageFilter extends mtoAbstractImageFilter
         return $this->calcSize($src_w, $src_h, $dst_w, $dst_h, $this->getPreserveAspectRatio(), $this->getSaveMinSize());
     }
 
+    function getJpegQuality()
+    {
+        return $this->getParam("jpeg_quality");
+    }
+
     function getWidth()
     {
         return $this->getParam('width');
@@ -50,7 +69,7 @@ class mtoImResizeImageFilter extends mtoAbstractImageFilter
 
     function getPreserveAspectRatio()
     {
-        return $this->getParam('preserve_aspect_ratio', true);
+        return $this->getParam('preserve_aspect_ratio', false);
     }
 
     function getSaveMinSize()
@@ -62,6 +81,7 @@ class mtoImResizeImageFilter extends mtoAbstractImageFilter
     {
         return $this->getParam("clip");
     }
+
 
     function getXxx()
     {

@@ -231,6 +231,15 @@
                 },
                 onSubmit: function(id, fileName){
 
+                    if ($(".blck_notupl").length == 1)
+                    {
+                        $(".blck_notupl").remove();
+                        $('.files').show();
+                        $('.full').show();
+                        $('.nav.nav_popup').show();
+                        $('.login_true').show();
+                        $('.buttons-block').show();
+                    }
 
                     if (fileName.length>16)
                     {

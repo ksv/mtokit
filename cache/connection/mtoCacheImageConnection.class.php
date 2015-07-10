@@ -11,6 +11,7 @@ class mtoCacheImageConnection extends mtoCacheAbstractConnection
     protected $cdn = null;
     protected $scope = null;
     protected $clip = true;
+    protected $keep_ratio = false;
 
     function __construct($args = array())
     {
@@ -41,6 +42,11 @@ class mtoCacheImageConnection extends mtoCacheAbstractConnection
         {
             $this->clip = $args['clip'];
         }
+        if (isset($args['keep_ratio']))
+        {
+            $this->keep_ratio = $args['keep_ratio'];
+        }
+
     }
 
     function setClip($clip)
@@ -101,9 +107,16 @@ class mtoCacheImageConnection extends mtoCacheAbstractConnection
     
     function set($key, $value, $args = array())
     {
+
         $tm = microtime(true);
         $args['path'] = $key;
         $filename = $this->generateFilename($args);
+
+        if (!empty($args['preserve_aspect_ratio']))
+        {
+            $this->keep_ratio = true;
+        }
+
         if (isset($args['noregenerate']))
         {
             if (mtoFs :: safeExists(mtoConf :: instance()->getFile("cache_args", "path") . "/" . $filename, "r"))
@@ -128,7 +141,9 @@ class mtoCacheImageConnection extends mtoCacheAbstractConnection
             }
         }
         mtoFs :: mkdir(dirname(mtoConf :: instance()->getFile("cache_args", "path") . "/" . $filename));
-        
+
+
+
         try
         {
             if (isset($args['conv']))
@@ -139,6 +154,9 @@ class mtoCacheImageConnection extends mtoCacheAbstractConnection
             {
                 $conv = $this->generator->create($args);
             }
+
+
+
             if (!($conv instanceof mtoAbstractImageConvertor))
             {
                 mtoProfiler :: instance()->logDebug("NOCONV:" . $conv, "debug/rest");
@@ -149,7 +167,7 @@ class mtoCacheImageConnection extends mtoCacheAbstractConnection
 
             if (isset($args['w']) && isset($args['h']))
             {
-                $conv->resize(array('width' => $args['w'], 'height' => $args['h'], 'clip' => $this->clip));
+                $conv->resize(array('width' => $args['w'], 'height' => $args['h'], 'clip' => $this->clip,'preserve_aspect_ratio'=>$this->keep_ratio));
             }
             if (isset($args['raw_imagick']))
             {

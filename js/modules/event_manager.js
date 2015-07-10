@@ -89,6 +89,7 @@ define(["cfg",
                     }
                     params['model'].push("b:"+ params['popup'] +"/m:");
                     params['model'].push($elem.data('model'));
+                    delete(params['bs.bsTooltip']);
                     _em.render(params['popup'], params, opener);
                 }
                 else
@@ -494,7 +495,11 @@ define(["cfg",
                 {
                     e.preventDefault();
                 }
-                //e.stopPropagation();
+                if ($(this).data('nobubble'))
+                {
+                    e.stopPropagation();
+                }
+
                 handle_event($(this), $(this).data('click'), e);
             });
 
