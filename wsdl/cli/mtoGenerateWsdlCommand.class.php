@@ -39,4 +39,9 @@ class mtoGenerateWsdlCommand extends mtoCliBaseCommand
         }
         $wsdl->saveWSDL($path, true);
     }
+
+    function infoName()
+    {
+        return "wsdl:generate_wsdl";
+    }
 }

@@ -26,4 +26,17 @@ class mtoCdnSyncSharedCommand extends mtoCliBaseCommand
 
 
     }
+
+    function infoName()
+    {
+        return "cdn:sync_shared";
+    }
+
+    function infoOptions()
+    {
+        return array(
+            ['name' => "target", 'required' => true, 'description' => "Target host"],
+            ['name' => "type", 'required' => true, 'description' => "scope"]
+        );
+    }
 }

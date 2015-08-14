@@ -10,6 +10,10 @@ class mtoCronCommand extends mtoCliBaseCommand
 
     function execute($args = array())
     {
+        if (isset($args['state']))
+        {
+            return $this->fetchState($args);
+        }
         mtoConf :: instance()->loadConfig("mtocron.ini");
         $this->config = mtoConf :: instance()->getSection("cron_jobs");
         $this->server_id = mtoConf :: instance()->get("cdn_user", "my_id");
@@ -92,6 +96,42 @@ class mtoCronCommand extends mtoCliBaseCommand
             }
         }
         $this->quiet();
+    }
+
+    function fetchState($args = [])
+    {
+        $list = mtoFs :: ls("var/locks");
+        foreach ($list as $file)
+        {
+            if (preg_match('#^cron\.(\d+)$#', $file, $matches))
+            {
+                $info = json_decode(file_get_contents("var/locks/" . $file), true);
+                $state = @pcntl_getpriority($matches[1]) === false ? "KILLED" : "ALIVE";
+                if (isset($args['clean']))
+                {
+                    if ($state == "KILLED")
+                    {
+                        unlink("var/locks/" . $file);
+                        $state = "REMOVED";
+                    }
+                }
+                if (!empty($args['kill']))
+                {
+                    if ($state == "ALIVE" && $args['kill'] == $info['args']['queue'])
+                    {
+                        if (posix_kill($matches[1], SIGKILL))
+                        {
+                            $state = "SHOOTED";
+                        }
+                        else
+                        {
+                            $state = "ERROR";
+                        }
+                    }
+                }
+                $this->out($matches[1]."\t".$state . "\t" . $info['command']."\t".json_encode($info['args']));
+            }
+        }
     }
 
     private function getJobs()
@@ -182,6 +222,10 @@ class mtoCronCommand extends mtoCliBaseCommand
 
 
 
+    function infoName()
+    {
+        return "cron";
+    }
 
     function infoTitle()
     {
@@ -197,7 +241,10 @@ class mtoCronCommand extends mtoCliBaseCommand
     {
         return array(
             array('name' => 'force-time', 'description' => "Override current time with YYYYMMDDHHII value"),
-            array('name' => "force-command", 'description' => "Force execute command")
+            array('name' => "force-command", 'description' => "Force execute command"),
+            array('name' => 'state', 'single' => true, 'descripton' => "List of current running jobs"),
+            array('name' => 'clean', 'single' => true, 'description' => "Remove killed desciptors"),
+            array('name' => 'kill', 'description' => "Name of queue to kill all running jobs")
         );
     }
 }

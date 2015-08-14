@@ -53,6 +53,11 @@ class mtoMakeReleaseCommand extends mtoCliBaseCommand
         $this->out("release builded");
         
     }
+
+    function infoName()
+    {
+        return "js:make_release";
+    }
     
     
     

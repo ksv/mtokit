@@ -82,4 +82,9 @@ class mtoCdnPingCommand extends mtoCliBaseCommand
             }
         }
     }
+
+    function infoName()
+    {
+        return "cdn:ping";
+    }
 }

@@ -94,4 +94,9 @@ class mtoProcDeployServiceCommand extends mtoCliBaseCommand
         }
         
     }
+
+    function infoName()
+    {
+        return "proc:proc_deploy_service";
+    }
 }

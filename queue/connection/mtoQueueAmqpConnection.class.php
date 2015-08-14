@@ -33,5 +33,10 @@ class mtoQueueAmqpConnection extends mtoQueueAbstractConnection
     {
         throw new mtoException("not implemented");
     }
+
+    function length()
+    {
+        throw new mtoException("not implemented");
+    }
     
 }

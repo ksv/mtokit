@@ -9,6 +9,12 @@ class mtoSyncTimeCommand extends mtoCliBaseCommand
         $this->out($result);
     }
 
+    function infoName()
+    {
+        return "proc:sync_time";
+    }
+
+
     function infoTitle()
     {
         return "Sync system time";

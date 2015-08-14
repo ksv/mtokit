@@ -26,4 +26,22 @@ class mtoDfsRegisterCommand extends mtoSoapBaseCommand
 
 
     }
+
+    function infoName()
+    {
+        return "dfs:register";
+    }
+
+    function infoTitle()
+    {
+        return "Register dfs client";
+    }
+
+    function infoOptions()
+    {
+        return array(
+            ['name' => "login", 'required' => true, 'description' => "Login"],
+            ['name' => "password", 'required' => true, 'description' => "Password"]
+        );
+    }
 }

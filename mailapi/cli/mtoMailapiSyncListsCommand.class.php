@@ -18,4 +18,9 @@ class mtoMailapiSyncListsCommand extends mtoCliBaseCommand
         }
 
     }
+
+    function infoName()
+    {
+        return "mailapi:mailapi_sync_lists";
+    }
 }

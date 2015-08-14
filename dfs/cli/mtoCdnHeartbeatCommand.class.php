@@ -60,6 +60,18 @@ class mtoCdnHeartbeatCommand extends mtoSoapBaseCommand
         }
     }
 
+    function infoName()
+    {
+        return "cdn:heartbeat";
+    }
+
+    function getArguments()
+    {
+        return array(
+            ['mapto' => "action", 'required' => true, 'description' => "Action to execute(master|slave|collect)"]
+        );
+    }
+
 
 //    function execute($args = array())
 //    {

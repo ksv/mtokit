@@ -107,6 +107,11 @@ class mtoFsSmartCleanupCommand extends mtoCliBaseCommand
         closedir($handle);
     }
 
+    function infoName()
+    {
+        return "fs:fs_smart_cleanup";
+    }
+
     function infoTitle()
     {
         return "Remove files by atime";

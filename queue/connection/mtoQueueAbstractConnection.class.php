@@ -16,6 +16,7 @@ abstract class mtoQueueAbstractConnection
     abstract function push($event = array());
     abstract function lock();
     abstract function unlock();
+    abstract function length();
     
     
 }

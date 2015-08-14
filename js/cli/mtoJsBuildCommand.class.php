@@ -108,4 +108,9 @@ class mtoJsBuildCommand extends mtoCliBaseCommand
         $settings = preg_replace("#<!--\# .+ -->#", $all, $settings);
         file_put_contents($this->conf->getFile("js.assets_path") . "/settings.tmp.js", $settings);
     }
+
+    function infoName()
+    {
+        return "js:js_build";
+    }
 }

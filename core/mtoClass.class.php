@@ -32,6 +32,11 @@ final class mtoClass
         $file = basename($filename);
         $items = explode('.', $file);
 
+        if (count($items) === 1)
+        {
+            $items[1] = "class";
+            $filename .= ".class.php";
+        }
         if (isset($items[1]))
         {
             if ($items[1] == 'class' || $items[1] == 'interface' || $items[1] == "trait")

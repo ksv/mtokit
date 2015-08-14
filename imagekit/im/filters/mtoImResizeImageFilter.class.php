@@ -35,7 +35,7 @@ class mtoImResizeImageFilter extends mtoAbstractImageFilter
         if ($this->getJpegQuality())
         {
             $image->setImageFormat('jpeg');
-            $image->setCompressionQuality($this->getJpegQuality());
+            $image->setImageCompressionQuality($this->getJpegQuality());
         }
         $container->replaceResource($image);
     }

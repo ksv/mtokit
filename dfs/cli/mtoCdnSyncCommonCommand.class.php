@@ -53,4 +53,9 @@ class mtoCdnSyncCommonCommand extends mtoCliBaseCommand
 
 
     }
+
+    function infoName()
+    {
+        return "cdn:sync_common";
+    }
 }

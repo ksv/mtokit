@@ -67,5 +67,16 @@ class mtoCli
         return "\033[34m" . $text . "\033[0m";
     }
 
+    static function hasColors()
+    {
+        if (DIRECTORY_SEPARATOR == '\\')
+        {
+            return false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI');
+        }
+
+        return function_exists('posix_isatty') && @posix_isatty(STDOUT);
+    }
+
+
 
 }

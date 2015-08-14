@@ -85,6 +85,11 @@ class mtoCliBaseCommand
         return array();
     }
 
+    function infoName()
+    {
+        return "";
+    }
+
     function assertArgs($args)
     {
         $alist = $this->infoArguments();

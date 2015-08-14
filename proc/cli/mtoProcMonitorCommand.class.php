@@ -82,4 +82,9 @@ class mtoProcMonitorCommand extends mtoCliBaseCommand
 
 
     }
+
+    function infoName()
+    {
+        return "proc:proc_monitor";
+    }
 }

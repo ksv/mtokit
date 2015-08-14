@@ -76,4 +76,9 @@ class mtoCliCommandHelpCommand extends mtoCliBaseCommand
             array('mapto' => "command", "description" => "Name of command")
         );
     }
+
+    function infoName()
+    {
+        return "help";
+    }
 }

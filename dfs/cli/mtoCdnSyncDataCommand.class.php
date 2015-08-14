@@ -34,4 +34,9 @@ class mtoCdnSyncDataCommand extends mtoCliBaseCommand
 
 
     }
+
+    function infoName()
+    {
+        return "cdn:sync_data";
+    }
 }

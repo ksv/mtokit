@@ -162,4 +162,9 @@ class mtoGeoUpdateCommand extends mtoCliBaseCommand
         
 
     }
+
+    function infoName()
+    {
+        return "geo:geo_update";
+    }
 }

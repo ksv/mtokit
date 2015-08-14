@@ -37,5 +37,10 @@ class mtoQueueMemcacheqConnection extends mtoQueueAbstractConnection
     {
         return true;
     }
+
+    function length()
+    {
+        return 0;
+    }
     
 }

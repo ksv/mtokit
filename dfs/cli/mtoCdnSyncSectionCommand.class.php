@@ -27,4 +27,18 @@ class mtoCdnSyncSectionCommand extends mtoCliBaseCommand
 
 
     }
+
+    function infoName()
+    {
+        return "cdn:sync_section";
+    }
+
+    function infoOptions()
+    {
+        return array(
+            ['name' => "section", 'required' => true, 'description' => "Section to sync"],
+            ['name' => "target", 'required' => true, 'description' => "Target host"],
+            ['name' => "type", 'required' => true, 'description' => "type"]
+        );
+    }
 }

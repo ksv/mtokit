@@ -55,4 +55,9 @@ class mtoTestRunCommand extends mtoCliBaseCommand
 //        }
 
     }
+
+    function infoName()
+    {
+        return "unittest:test_run";
+    }
 }

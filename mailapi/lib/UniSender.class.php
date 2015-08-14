@@ -99,6 +99,7 @@ class UniSender
 
     protected function callMethod($MethodName, $Params = array())
     {
+        $t = microtime(true);
         if ($this->Encoding != 'UTF8')
         {
             if (function_exists('iconv'))
@@ -160,6 +161,11 @@ class UniSender
             $RetryCount++;
         }
         while ($Result === false && $RetryCount < $this->RetryCount);
+
+        if (!in_array($MethodName, []))
+        {
+            mtoProfiler :: instance()->logDebug(round(microtime(true)-$t, 2) . "[" . $RetryCount . "]\t" . $MethodName . "\t" . json_encode($Params), "mail/call_unisender");
+        }
 
         return $Result;
     }

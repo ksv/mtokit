@@ -21,4 +21,9 @@ class mtoCliListCommandsCommand extends mtoCliBaseCommand
     {
         return "Output available commands";
     }
+
+    function infoName()
+    {
+        return "list";
+    }
 }

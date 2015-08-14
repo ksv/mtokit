@@ -121,7 +121,7 @@ class mtoCdnManager
         {
             return $this->config['pool'][$id][$param];
         }
-        throw new mtoException("Host not found");
+        throw new mtoException("Host ".$id." not found");
     }
 
     function getHostsBySection($section)

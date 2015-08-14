@@ -73,6 +73,11 @@ class mtoQueue
         }
         return $this;
     }
+
+    function length()
+    {
+        return $this->conn->length();
+    }
     
     function processQueue($limit = 0)
     {
@@ -100,6 +105,7 @@ class mtoQueue
                 {
                     $this->push($event['name'], $event['args'], array('debug' => true));
                 }
+                //var_dump($event);
                 $this->getWorker($event['name'])->process($event['args']);
                 $this->log("QUEUE", $event['name'], $event['args']);
                 $count++;
@@ -117,6 +123,9 @@ class mtoQueue
     {
         if ($this->config['enabled'])
         {
+            $args['c'] = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : "";
+            $args['a'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : "";
+            $args['i'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "";
             $this->push($event, $args);
             $this->log("PUSH", $event, $args);
         }

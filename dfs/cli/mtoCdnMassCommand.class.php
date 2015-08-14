@@ -32,4 +32,16 @@ class mtoCdnMassCommand extends mtoCliBaseCommand
             $this->out("=====================");
         }
     }
+
+    function infoName()
+    {
+        return "cdn:mass";
+    }
+
+    function infoArguments()
+    {
+        return array(
+            ['mapto' => "command", 'required' => true, 'description' => "Action to execute"]
+        );
+    }
 }

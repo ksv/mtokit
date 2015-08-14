@@ -47,4 +47,9 @@ class mtoQueueDatabaseConnection extends mtoQueueAbstractConnection
     {
         mtoDb :: execute("select release_lock('q_".$this->queue."')");
     }
+
+    function length()
+    {
+        return mtoDb :: fetchOneValue("select count(*) from " . $this->table);
+    }
 }

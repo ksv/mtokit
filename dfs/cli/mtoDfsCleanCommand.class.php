@@ -18,4 +18,9 @@ class mtoDfsCleanCommand extends mtoCliBaseCommand
 
 
     }
+
+    function infoName()
+    {
+        return "dfs:clean";
+    }
 }

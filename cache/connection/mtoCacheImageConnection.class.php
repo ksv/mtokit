@@ -1,7 +1,7 @@
 <?php
-mtoClass :: import('mtokit/cache/connection/mtoCacheAbstractConnection.class.php');
-mtoClass :: import('mtokit/dfs/mtoCdnManager.class.php');
-mtoClass :: import('mtokit/profiler/mtoProfiler.class.php');
+mtoClass :: import('mtokit/cache/connection/mtoCacheAbstractConnection');
+mtoClass :: import('mtokit/dfs/mtoCdnManager');
+mtoClass :: import('mtokit/profiler/mtoProfiler');
 
 class mtoCacheImageConnection extends mtoCacheAbstractConnection
 {
@@ -18,16 +18,18 @@ class mtoCacheImageConnection extends mtoCacheAbstractConnection
 
         parent::__construct($args);
         $this->toolkit = mtoToolkit :: instance();
-        if (isset($args['generator']))
+        if (empty($this->config['generator']))
         {
-            $generator = $args['generator'];
+            $this->config['generator'] = "common";
         }
-        else
+
+        if (!array_key_exists($this->config['generator'], $this->conf->get('cache_args.gen')))
         {
-            $generator = "common";
+            throw new mtoException('Cache filename generator not found');
         }
-        $class = "mto" . mto_camel_case($generator) . "FilenameGenerator";
-        mtoClass :: import("mtokit/cache/generator/" . $class . ".class.php");
+        $path = $this->conf->get('cache_args.gen')[$this->config['generator']];
+        mtoClass :: import($path);
+        $class = basename($path);
         $this->generator = new $class($this);
         if (isset($args['cdn']))
         {

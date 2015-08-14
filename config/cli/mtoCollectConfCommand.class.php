@@ -62,4 +62,26 @@ class mtoCollectConfCommand extends mtoCliBaseCommand
             }
         }
     }
+
+    function infoName()
+    {
+        return "config:collect_conf";
+    }
+
+    function infoTitle()
+    {
+        return "Copy system configuration to backup";
+    }
+
+    function infoDescription()
+    {
+        return "Copy system wide config file to backup location according to mtosysconf rules";
+    }
+
+    function infoOptions()
+    {
+        return array(
+            ['name' => 'commit', 'single' => true, 'description' => "Commit copied files into subversion"]
+        );
+    }
 }

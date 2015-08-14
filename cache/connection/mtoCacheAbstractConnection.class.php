@@ -6,10 +6,12 @@ abstract class mtoCacheAbstractConnection implements mtoCacheConnection
 {
 
     protected $config;
+    protected $conf;
     use mtoSingletone;
 
     function __construct($args = array())
     {
+        $this->conf = mtoConf :: instance();
         foreach ($args as $option_name => $option_value)
         {
             if (!is_null($option_value))
@@ -21,7 +23,7 @@ abstract class mtoCacheAbstractConnection implements mtoCacheConnection
 
     protected function _resolveKey($keys)
     {
-        $suffix = mtoConf :: instance()->get("core", "suffix");
+        $suffix = $this->conf->get("core.suffix");
         if (is_array($keys))
         {
             $new_keys = array();
@@ -36,26 +38,6 @@ abstract class mtoCacheAbstractConnection implements mtoCacheConnection
         }
 
         return $new_keys;
-        
-//        if (!isset($this->config['prefix']) || !$this->config['prefix'])
-//        {
-//            return $keys;
-//        }
-//
-//        if (is_array($keys))
-//        {
-//            $new_keys = array();
-//            foreach ($keys as $pos => $key)
-//            {
-//                $new_keys[$pos] = $this->config['prefix'] . $key;
-//            }
-//        }
-//        else
-//        {
-//            $new_keys = $this->config['prefix'] . $keys;
-//        }
-//
-//        return $new_keys;
     }
 
     function get($keys)

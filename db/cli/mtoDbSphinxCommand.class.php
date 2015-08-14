@@ -94,7 +94,10 @@ class mtoDbSphinxCommand extends mtoCliBaseCommand
         {
             if (!$out)
             {
-                $this->quiet();
+                if (empty($args['verbose']))
+                {
+                    $this->quiet();
+                }
             }
         }
 
@@ -140,6 +143,11 @@ class mtoDbSphinxCommand extends mtoCliBaseCommand
             }
         }
         return $locks;
+    }
+
+    function infoName()
+    {
+        return "system:sphinx";
     }
 
     function infoTitle()

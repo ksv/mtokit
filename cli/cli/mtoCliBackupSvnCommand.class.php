@@ -21,4 +21,9 @@ class mtoCliBackupSvnCommand extends mtoCliBaseCommand
         chdir(mtoConf :: instance()->get("core", "root"));
 
     }
+
+    function infoName()
+    {
+        return "cli:cli_backup_svn";
+    }
 }

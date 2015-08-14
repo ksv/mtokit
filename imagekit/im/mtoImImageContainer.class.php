@@ -83,11 +83,10 @@ class mtoImImageContainer extends mtoAbstractImageContainer
     }
     $this->img->setImageFormat($type);
     $this->img->setImageFilename($file_name);
-    
     if(!is_null($quality) && strtolower($type) == 'jpeg')
     {
-      $this->img->setCompression(imagick::COMPRESSION_JPEG);
-      $this->img->setCompressionQuality($quality);
+      $this->img->setImageCompression(imagick::COMPRESSION_JPEG);
+      $this->img->setImageCompressionQuality($quality);
     }
     
     if (!$this->img->writeImage($file_name))

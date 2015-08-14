@@ -72,6 +72,11 @@ class mtoCacheToolCommand extends mtoCliBaseCommand
         $this->out(count($keys) . " dumped");
     }
 
+    function infoName()
+    {
+        return "cache:tool";
+    }
+
     function infoTitle()
     {
         return "Cache utilities";

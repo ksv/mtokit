@@ -49,4 +49,9 @@ class mtoDfsUpdateCommand extends mtoSoapBaseCommand
 
 
     }
+
+    function infoName()
+    {
+        return "dfs:update";
+    }
 }

@@ -21,4 +21,9 @@ class mtoCliConsoleCommand extends mtoCliBaseCommand
     {
         return "Run Boris console with application environment";
     }
+
+    function infoName()
+    {
+        return "console";
+    }
 }

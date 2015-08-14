@@ -61,6 +61,11 @@ class mtoCssBuildCommand extends mtoCliBaseCommand
 //        $minimizer->compressFiles($afiles, "scripts/build/pack.admin.css");
 //        $minimizer->compressFiles($ffiles, "scripts/build/pack.front.css");
     }
+
+    function infoName()
+    {
+        return "js:css_build";
+    }
     
     
     

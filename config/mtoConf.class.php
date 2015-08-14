@@ -10,10 +10,11 @@ class mtoConf
     private $env = array();
     
     use mtoSingletone;
+    use mtoFacade;
 
     function __construct($args = array())
     {
-        $this->loadConfig(__DIR__ . '/../mtokit.ini');
+        $this->initConfig();
         if (isset($args['filename']))
         {
             $this->loadConfig($args['filename']);
@@ -26,18 +27,18 @@ class mtoConf
         {
             return $this;
         }
-        $root = $this->get("core", "root");
+        $root = $this->get('core.root');
         if (file_exists($filename))
         {
             $config = parse_ini_file($filename, true);
         }
-        elseif (!empty($root) && file_exists($this->get('core', "root") . "/" . $this->get("core", "confdir") . "/" . $filename))
+        elseif (!empty($root) && file_exists($this->get('core.root') . "/" . $this->get('core.confdir') . "/" . $filename))
         {
-            $config = parse_ini_file($this->get('core', "root") . "/" . $this->get("core", "confdir") . "/" . $filename, true);
+            $config = parse_ini_file($this->get('core.root') . "/" . $this->get('core.confdir') . "/" . $filename, true);
         }
         elseif (strpos($filename, "mtokit") === 0)
         {
-            $config = parse_ini_file($this->get("core", "__mtopath__") . "/" . $filename, true);
+            $config = parse_ini_file($this->get('core.__mtopath__') . "/" . $filename, true);
         }
         elseif (!empty($root))
         {
@@ -224,6 +225,92 @@ class mtoConf
     {
         return self :: instance()->env($name, $value, $append);
     }
+
+    private function initConfig()
+    {
+        $this->config = [
+            'core' => [
+                'timezone' => 'Europe/Moscow'
+            ],
+            'cache' => [
+                'redis' => 'redis://localhost:6379',
+                'memcache' => 'memcache://localhost:11211'
+            ],
+            'cache_args' => [
+                'path' => 'var/cache',
+                'url' => '/cache',
+                'gen' => [
+                    'common' => 'mtokit/cache/generator/mtoCommonFilenameGenerator'
+                ]
+            ],
+            'view' => [
+                'ext_twig' => 'twig',
+                'ext_tpl' => 'mlte'
+            ],
+            'webapp' => [
+                'route' => [
+                    '/|controller=frontpage;action=default',
+                    '/[controller]/[action]/[id]',
+                    '/[controller]/[action]',
+                    '/[controller]|action=default'
+                ]
+            ],
+            'cli' => [
+                'commands' => [
+                    'list' => 'mtokit/cli/cli/mtoCliListCommandsCommand',
+                    'help' => 'mtokit/cli/cli/mtoCliCommandHelpCommand',
+                    'cron' => 'mtokit/dfs/cli/mtoCronCommand',
+                    'console' => 'mtokit/cli/cli/mtoCliConsoleCommand',
+
+                    'cache:tool' => 'mtokit/cache/cli/mtoCacheToolCommand',
+
+                    'cli:cli_backup_svn' => 'mtokit/cli/cli/mtoCliBackupSvnCommand',
+
+                    'config:collect_conf' => 'mtokit/config/cli/mtoCollectConfCommand',
+                    'config:compile_conf' => 'mtokit/config/cli/mtoCompileConfCommand',
+
+                    'system:backup_database' => 'mtokit/db/cli/mtoDbBackupCommand',
+                    'system:sphinx' => 'mtokit/db/cli/mtoDbSphinxCommand',
+
+                    'dfs:cdn_clean' => 'mtokit/dfs/cli/mtoCdnCleanCommand',
+                    'dfs:cdn_heartbeat' => 'mtokit/dfs/cli/mtoCdnHeartbeatCommand',
+                    'dfs:cdn_mass' => 'mtokit/dfs/cli/mtoCdnMassCommand',
+                    'dfs:cdn_ping' => 'mtokit/dfs/cli/mtoCdnPingCommand',
+                    'dfs:cdn_quarantine' => 'mtokit/dfs/cli/mtoCdnQuarantineCommand',
+                    'dfs:cdn_sync_common' => 'mtokit/dfs/cli/mtoCdnSyncCommonCommand',
+                    'dfs:cdn_sync_data' => 'mtokit/dfs/cli/mtoCdnSyncDataCommand',
+                    'dfs:cdn_sync_section' => 'mtokit/dfs/cli/mtoCdnSyncSectionCommand',
+                    'dfs:cdn_sync_shared' => 'mtokit/dfs/cli/mtoCdnSyncSharedCommand',
+                    'dfs:dfs_clean' => 'mtokit/dfs/cli/mtoDfsCleanCommand',
+                    'dfs:dfs_register' => 'mtokit/dfs/cli/mtoDfsRegisterCommand',
+                    'dfs:dfs_update' => 'mtokit/dfs/cli/mtoDfsUpdateCommand',
+
+                    'fs:fs_smart_cleanup' => 'mtokit/fs/cli/mtoFsSmartCleanupCommand',
+
+                    'geo:geo_update' => 'mtokit/geo/cli/mtoGeoUpdateCommand',
+
+                    'js:css_build' => 'mtokit/js/cli/mtoCssBuildCommand',
+                    'js:js_build' => 'mtokit/js/cli/mtoJsBuildCommand',
+                    'js:make_release' => 'mtokit/js/cli/mtoMakeReleaseCommand',
+
+                    'mailapi:mailapi_sync_lists' => 'mtokit/mailapi/cli/mtoMailapiSyncListsCommand',
+
+                    'proc:proc_deploy_service' => 'mtokit/proc/cli/mtoProcDeployServiceCommand',
+                    'proc:sync_time' => 'mtokit/proc/cli/mtoSyncTimeCommand',
+
+                    'profiler:profiler_log_tool' => 'mtokit/profiler/cli/mtoProfilerLogToolCommand',
+
+                    'queue:queue_process' => 'mtokit/queue/cli/mtoQueueProcessCommand',
+                    'queue:check' => 'mtokit/queue/cli/mtoQueueCheckCommand',
+
+                    'wsdl:generate_wsdl' => 'mtokit/wsdl/cli/mtoGenerateWsdlCommand'
+                ]
+            ]
+        ];
+    }
+
+
+
 
 
 }

@@ -97,4 +97,9 @@ class mtoCdnQuarantineCommand extends mtoCliBaseCommand
         }
         closedir($handle);
     }
+
+    function infoName()
+    {
+        return "cdn:quarantine";
+    }
 }

@@ -50,6 +50,11 @@ class mtoDbBackupCommand extends mtoCliBaseCommand
         chdir(mtoConf :: instance()->get("core", "root"));
     }
 
+    function infoName()
+    {
+        return "system:backup_database";
+    }
+
     function infoTitle()
     {
         return "Backup one or all mysql databases";

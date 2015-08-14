@@ -40,4 +40,26 @@ class mtoCompileConfCommand extends mtoCliBaseCommand
             $this->out($filename . " commited to revision: " . $result[0]);
         }
     }
+
+    function infoName()
+    {
+        return "config:compile_conf";
+    }
+
+    function infoArguments()
+    {
+        return array(
+            ['mapto' => 'scope', 'required' => true, 'description' => "Scope to compile"]
+        );
+    }
+
+    function infoTitle()
+    {
+        return "Compile set of config files to single one";
+    }
+
+    function infoDescription()
+    {
+        return "Take all php config files from 'scope' frolder and join it to `scope`.compiled.php";
+    }
 }

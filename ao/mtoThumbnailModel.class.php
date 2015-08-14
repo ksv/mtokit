@@ -46,7 +46,7 @@ abstract class mtoThumbnailModel extends mtoActiveObject
         {
             $filename = $this->_imgcache->set($args['path'], null, $this->_thumbnail_args);
         }
-        return $filename ? $filename : "/images/spacer.gif";
+        return $filename ? $filename : ("/" . Media :: STUB_PATH);
 
     }
 

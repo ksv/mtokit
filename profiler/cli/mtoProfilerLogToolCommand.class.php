@@ -66,7 +66,7 @@ class mtoProfilerLogToolCommand extends mtoCliBaseCommand
     {
         $fp = fopen($log, "w");
         fclose($fp);
-        $thid->out($log . " truncated");
+        $this->out($log . " truncated");
     }
     
     function execRotate($log)
@@ -84,6 +84,11 @@ class mtoProfilerLogToolCommand extends mtoCliBaseCommand
         }
         rename($log, $log . ".1");
         $this->out($log . " rotated");
+    }
+
+    function infoName()
+    {
+        return "profiler:log_tool";
     }
     
     

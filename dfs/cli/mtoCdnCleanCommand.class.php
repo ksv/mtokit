@@ -49,4 +49,9 @@ class mtoCdnCleanCommand extends mtoCliBaseCommand
         }
         
     }
+
+    function infoName()
+    {
+        return "dfs:cdn_clean";
+    }
 }
